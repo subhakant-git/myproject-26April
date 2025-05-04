@@ -36,4 +36,4 @@ jobs:
           scp: |
            './target/*.war' => /tmp
           last_ssh:
-		       ls -al /tmp
+	   ls -al /tmp
