@@ -1,7 +1,8 @@
+---
 name: CI using maven and Jenkins
 on:
- push:  # run the workflow on every commit
- workflow_dispatch: # run the workflow maually
+  push: null
+  workflow_dispatch: null
 jobs:
   buildJob:
     runs-on: ubuntu-latest
@@ -11,9 +12,9 @@ jobs:
       - name: Install Java and Maven on the ubuntu server
         uses: actions/setup-java@v4
         with:
-         distribution: 'temurin'
-         java-version: '11'
-         cache: 'maven'
+          distribution: temurin
+          java-version: "11"
+          cache: maven
       - name: Test the code
         run: mvn test
       - name: Build the code
@@ -21,19 +22,19 @@ jobs:
       - name: Get the artifact and upload on github repo
         uses: actions/upload-artifact@v4
         with:
-         name: java-example-artifact
-         path: /home/runner/work/MavenBuild-SL/MavenBuild-SL/target/java-example.war
+          name: java-example-artifact
+          path: /home/runner/work/MavenBuild-SL/MavenBuild-SL/target/java-example.war
       - name: Connect to LAB and run curl command to trigger a Job
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
         with:
-          host: '65.2.111.206' # change to your lab server public IP
-          user: 'labuser'
-          pass: 'Nuvelabs123$'
+          host: 65.2.111.206
+          user: labuser
+          pass: Nuvelabs123$
           port: 22
           connect_timeout: 10s
-          first_ssh: |
-            sudo curl -l -u admin:Root123$ http://localhost:8080/job/build-Job/build?token=token1
+          first_ssh: >
+            sudo curl -l -u admin:Root123$
+            http://localhost:8080/job/build-Job/build?token=token1
           scp: |
-           './target/*.war' => /tmp
-          last_ssh:
-	   ls -al /tmp
+            './target/*.war' => /tmp
+          last_ssh: ls -al /tmp
